@@ -1,9 +1,13 @@
+// This showcase contains 4 programs that you can run back to back (at once)
+
+// #1: Measures time using stopwatch while doing nothing
 STARTW
 NOP
 STOPW
 
 LBL 'S'
 
+// #2: Hello world
 PUSHa 'H'
 PUSHa 'e'
 PUSHa 'l'
@@ -62,7 +66,7 @@ WRITECb
 WRITECb
 CLR
 
-
+// #3: Math
 PUSHa 0b1001
 PUSHa 0b1101
 PUSHa 0xFF
@@ -84,7 +88,7 @@ PUSHa 0x0A
 WRITECa
 CLR
 
-
+// #4: Fibonacci sequence up to 1B
 STARTW
 PUSHa 0
 DUPa
@@ -125,7 +129,7 @@ WRITECa
 STOPW
 CLR
 
-JUMP 'E'
+JUMP 'E' // comment this line out to go in a loop
 HLT 1000
 JUMP 'S'
 

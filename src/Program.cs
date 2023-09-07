@@ -36,7 +36,7 @@ Span<int?> b = new int?[256];
 Span<Instruction> inst = new Instruction[512];
 
 int aPtr = -1, bPtr = -1, instPtr = 0, instSpace = 0;
-int? bucket = null;
+int? cReg = null;
 
 using StreamReader input = new(path);
 ReadOnlySpan<char> line;
@@ -156,7 +156,7 @@ for (instPtr = 0; instPtr < instSpace; instPtr++)
             }
             break;
         case Op.POPa:
-            (bucket, string? pop_a_error) = Pop(ref a, ref aPtr);
+            (cReg, string? pop_a_error) = Pop(ref a, ref aPtr);
             if (!string.IsNullOrWhiteSpace(pop_a_error))
             {
                 Console.Error.WriteLine($"[{instPtr}]: {i.Operation} {pop_a_error}");
@@ -164,7 +164,7 @@ for (instPtr = 0; instPtr < instSpace; instPtr++)
             }
             break;
         case Op.POPb:
-            (bucket, string? pop_b_error) = Pop(ref b, ref bPtr);
+            (cReg, string? pop_b_error) = Pop(ref b, ref bPtr);
             if (!string.IsNullOrWhiteSpace(pop_b_error))
             {
                 Console.Error.WriteLine($"[{instPtr}]: {i.Operation} {pop_b_error}");
@@ -418,7 +418,7 @@ for (instPtr = 0; instPtr < instSpace; instPtr++)
             }
             break;
         case Op.CLR:
-            bucket = null;
+            cReg = null;
 
             if (aPtr > -1 || bPtr > -1)
             {
@@ -471,9 +471,9 @@ for (instPtr = 0; instPtr < instSpace; instPtr++)
             Console.WriteLine($"b: {bDebug}");
         }
 
-        if (bucket.HasValue)
+        if (cReg.HasValue)
         {
-            Console.WriteLine($"c: {bucket}");
+            Console.WriteLine($"c: {cReg}");
         }
     }
 
@@ -487,12 +487,11 @@ string? Push(int? value, ref Span<int?> stack, ref int stackPtr)
 {
     if (!value.HasValue)
     {
-        if (!bucket.HasValue)
+        if (!cReg.HasValue)
         {
-            return "ERR! Null push value with an empty bucket";
+            return "ERR! Null push value with an empty register";
         }
-        value = bucket;
-        bucket = null;
+        value = cReg;
     }
 
     if (stackPtr == stack.Length - 1)
@@ -630,7 +629,7 @@ enum Op
 
 struct Instruction
 {
-    public Op Operation { get; set; }
-    public int? Param { get; set; }
-    public int? JumpLocation { get; set; }
+    public Op Operation;
+    public int? Param;
+    public int? JumpLocation;
 }
