@@ -46,7 +46,7 @@ dotnet run showcase.jmps -w
 ## Instruction set
 
 | Instruction | Description | Has param? |
-| ----------- | ----------- | No |
+| ----------- | ----------- | ---------- |
 | NOP         | Does nothing. | No |
 | PUSHa       | Pushes value on stack __a__. | Optional. If not provided the value is read from register __c__. |
 | PUSHb       | Pushes value on stack __b__. | Optional. If not provided the value is read from register __c__. |
