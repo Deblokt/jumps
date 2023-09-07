@@ -45,7 +45,7 @@ Stopwatch sw = Stopwatch.StartNew();
 
 while ((line = input.ReadLine().AsSpan()) != null)
 {
-    if (line.Length == 0 || line.Trim().StartsWith("//"))
+    if (line.Length == 0 || line.TrimStart().StartsWith("//"))
     {
         continue;
     }
@@ -87,6 +87,7 @@ for (int jumpPtr = 0; jumpPtr < instSpace; jumpPtr++)
         if (!jumpInst.Param.HasValue)
         {
             Console.Error.WriteLine($"[{jumpPtr}]: {jumpInst.Operation} ERR! Jump parameter undefined");
+            return;
         }
 
         for (int locPtr = 0; locPtr < instSpace; locPtr++)
@@ -97,6 +98,7 @@ for (int jumpPtr = 0; jumpPtr < instSpace; jumpPtr++)
                 if (!locInst.Param.HasValue)
                 {
                     Console.Error.WriteLine($"[{locPtr}]: {locInst.Operation} ERR! Label parameter undefined");
+                    return;
                 }
 
                 if (locInst.Param!.Value == jumpInst.Param!.Value)
@@ -229,50 +231,6 @@ for (instPtr = 0; instPtr < instSpace; instPtr++)
                     Console.Error.WriteLine($"[{instPtr}]: {i.Operation} {i.Param} {jumps_b_error}");
                     return;
                 }
-            }
-            break;
-        case Op.DUPa:
-            (int? dup_a_value, string? dup_a_value_error) = Pop(ref a, ref aPtr);
-            if (!string.IsNullOrWhiteSpace(dup_a_value_error))
-            {
-                Console.Error.WriteLine($"[{instPtr}]: {i.Operation} {dup_a_value_error}");
-                return;
-            }
-
-            string? dup_a_value_push1_error = Push(dup_a_value!.Value, ref a, ref aPtr);
-            if (!string.IsNullOrWhiteSpace(dup_a_value_push1_error))
-            {
-                Console.Error.WriteLine($"[{instPtr}]: {i.Operation} {dup_a_value_push1_error}");
-                return;
-            }
-
-            string? dup_a_value_push2_error = Push(dup_a_value!.Value, ref a, ref aPtr);
-            if (!string.IsNullOrWhiteSpace(dup_a_value_push2_error))
-            {
-                Console.Error.WriteLine($"[{instPtr}]: {i.Operation} {dup_a_value_push2_error}");
-                return;
-            }
-            break;
-        case Op.DUPb:
-            (int? dup_b_value, string? dup_b_value_error) = Pop(ref b, ref bPtr);
-            if (!string.IsNullOrWhiteSpace(dup_b_value_error))
-            {
-                Console.Error.WriteLine($"[{instPtr}]: {i.Operation} {dup_b_value_error}");
-                return;
-            }
-
-            string? dup_b_value_push1_error = Push(dup_b_value!.Value, ref b, ref bPtr);
-            if (!string.IsNullOrWhiteSpace(dup_b_value_push1_error))
-            {
-                Console.Error.WriteLine($"[{instPtr}]: {i.Operation} {dup_b_value_push1_error}");
-                return;
-            }
-
-            string? dup_b_value_push2_error = Push(dup_b_value!.Value, ref b, ref bPtr);
-            if (!string.IsNullOrWhiteSpace(dup_b_value_push2_error))
-            {
-                Console.Error.WriteLine($"[{instPtr}]: {i.Operation} {dup_b_value_push2_error}");
-                return;
             }
             break;
         case Op.ADDa:
@@ -423,11 +381,13 @@ for (instPtr = 0; instPtr < instSpace; instPtr++)
             if (aPtr > -1 || bPtr > -1)
             {
                 Console.Error.WriteLine($"[{instPtr}]: {i.Operation} ERR! Stack size non zero. a: {aPtr + 1}, b: {bPtr + 1}");
+                return;
             }
 
             if (sw.IsRunning)
             {
                 Console.Error.WriteLine($"[{instPtr}]: {i.Operation} ERR! Stopwatch left running");
+                return;
             }
             break;
         case Op.HLT:
@@ -459,13 +419,13 @@ for (instPtr = 0; instPtr < instSpace; instPtr++)
 
     if (debug)
     {
-        string aDebug = string.Join(' ', a.ToArray().Reverse()).Trim();
+        string aDebug = string.Join(' ', a.ToArray().Reverse()).TrimEnd();
         if (!string.IsNullOrWhiteSpace(aDebug))
         {
             Console.WriteLine($"a: {aDebug}");
         }
 
-        string bDebug = string.Join(' ', b.ToArray().Reverse()).Trim();
+        string bDebug = string.Join(' ', b.ToArray().Reverse()).TrimEnd();
         if (!string.IsNullOrWhiteSpace(bDebug))
         {
             Console.WriteLine($"b: {bDebug}");
@@ -611,8 +571,6 @@ enum Op
     JUMP,
     JUMPSa,
     JUMPSb,
-    DUPa,
-    DUPb,
     ADDa,
     ADDb,
     NEGa,

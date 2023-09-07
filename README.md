@@ -48,26 +48,24 @@ dotnet run showcase.jmps -w
 | Instruction | Description | Has param? |
 | ----------- | ----------- | ---------- |
 | NOP         | Does nothing. | No |
-| PUSHa       | Pushes value on stack __a__. | Optional. If not provided the value is read from register __c__. |
-| PUSHb       | Pushes value on stack __b__. | Optional. If not provided the value is read from register __c__. |
-| POPa        | Pops value from stack __a__ into register __c__. | No |
-| POPb        | Pops value from stack __b__ into register __c__. | No |
+| PUSHa       | Pushes a value on stack __a__. | Optional. If not provided the value is read from register __c__. |
+| PUSHb       | Pushes a value on stack __b__. | Optional. If not provided the value is read from register __c__. |
+| POPa        | Pops a value from stack __a__ into register __c__. | No |
+| POPb        | Pops a value from stack __b__ into register __c__. | No |
 | LBL         | Label (marker) for jump location. | Yes |
 | JUMP        | Unconditional jump. | Yes (jump label) |
 | JUMPSa      | Conditional jump. Pops two values from stack __a__ and jumps when the second value is smaller ie topmost value is bigger. | Yes (jump label) |
 | JUMPSb      | Conditional jump. Pops two values from stack __b__ and jumps when the second value is smaller ie topmost value is bigger. | Yes (jump label) |
-| DUPa        | Duplicates topmost value on stack __a__. Pops the value and performs two pushes. | No |
-| DUPb        | Duplicates topmost value on stack __b__. Pops the value and performs two pushes. | No |
-| ADDa        | Adds two values on stack __a__. Pops two values from stack __a__ and pushes the result back on stack __a__. | No |
-| ADDb        | Adds two values on stack __b__. Pops two values from stack __b__ and pushes the result back on stack __b__. | No |
-| NEGa        | Negates value on stack __a__. Pops value from stack __a__ and pushes the negated result back on stack __a__. | No |
-| NEGb        | Negates value on stack __b__. Pops value from stack __b__ and pushes the negated result back on stack __b__. | No |
-| WRITEa      | Writes value to stdout. Value is popped from stack __a__. | No |
-| WRITEb      | Writes value to stdout. Value is popped from stack __b__. | No |
-| WRITECa     | Writes value as char to stdout. Value is popped from stack __a__. | No |
-| WRITECb     | Writes value as char to stdout. Value is popped from stack __b__. | No |
-| CLR         | Clears registers. Throws error if stacks are not empty. Throws error if stopwatch is left running. Good command to finish your program with in order to make sure everything is tidy. | No |
-| HLT         | Halts the execution. | Optional. If provided the execution is halted for a specified interval in milliseconds, else indefinitely. |
+| ADDa        | Adds two values from stack __a__. Pops two values from stack __a__ and pushes the result back on stack __a__. | No |
+| ADDb        | Adds two values from stack __b__. Pops two values from stack __b__ and pushes the result back on stack __b__. | No |
+| NEGa        | Negates a value on stack __a__. Pops value from stack __a__ and pushes the negated result back on stack __a__. | No |
+| NEGb        | Negates a value on stack __b__. Pops value from stack __b__ and pushes the negated result back on stack __b__. | No |
+| WRITEa      | Writes a value to stdout. Value is popped from stack __a__. | No |
+| WRITEb      | Writes a value to stdout. Value is popped from stack __b__. | No |
+| WRITECa     | Writes a value as char to stdout. Value is popped from stack __a__. | No |
+| WRITECb     | Writes a value as char to stdout. Value is popped from stack __b__. | No |
+| CLR         | Clears registers. Throws an error if stacks are not empty or if the stopwatch is running. | No |
+| HLT         | Halts the execution. | Optional. Interval in milliseconds. Indefinitely if not provided. |
 | STARTW      | Starts the stopwatch. | No |
 | STOPW       | Stops the stopwatch. | No |
 
@@ -166,34 +164,48 @@ CLR
 // #4: Fibonacci sequence up to 1B
 STARTW
 PUSHa 0
-DUPa
+POPa
+PUSHa
+PUSHa
 WRITEa
 PUSHa ' '
 WRITECa
 PUSHa 1
-DUPa
+POPa
+PUSHa
+PUSHa
 WRITEa
 PUSHa ' '
 WRITECa
 PUSHb 1
 LBL 0xFACA
 ADDa
-DUPa
+POPa
+PUSHa
+PUSHa
 WRITEa
 PUSHa ' '
 WRITECa
-DUPa
+POPa
+PUSHa
+PUSHa
 POPa
 PUSHb
 ADDb
-DUPb
+POPb
+PUSHb
+PUSHb
 WRITEb
 PUSHa ' '
 WRITECa
-DUPb
+POPb
+PUSHb
+PUSHb
 POPb
 PUSHa
-DUPa
+POPa
+PUSHa
+PUSHa
 PUSHa 1000000000
 JUMPSa 0xFACA
 POPa
