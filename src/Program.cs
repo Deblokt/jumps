@@ -419,13 +419,13 @@ for (instPtr = 0; instPtr < instSpace; instPtr++)
 
     if (debug)
     {
-        string aDebug = string.Join(' ', a.ToArray().Reverse()).TrimEnd();
+        string aDebug = string.Join(' ', a.ToArray().Reverse()).Trim();
         if (!string.IsNullOrWhiteSpace(aDebug))
         {
             Console.WriteLine($"a: {aDebug}");
         }
 
-        string bDebug = string.Join(' ', b.ToArray().Reverse()).TrimEnd();
+        string bDebug = string.Join(' ', b.ToArray().Reverse()).Trim();
         if (!string.IsNullOrWhiteSpace(bDebug))
         {
             Console.WriteLine($"b: {bDebug}");
